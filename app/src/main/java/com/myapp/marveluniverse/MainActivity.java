@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity implements ArchitecturalFunc
   @Override
   public void load() {
     Log.i("--chk--", "inside load");
-    Call<Res> heroesList = Connection.getMarvelHeroes().heroes();
+    Call<Res> heroesList = Connection.getMarvelHeroes().heroes(20,40);
     heroesList.enqueue(new Callback<Res>() {
       @Override
       public void onResponse(Call<Res> call, Response<Res> response) {
