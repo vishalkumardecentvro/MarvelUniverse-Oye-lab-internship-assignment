@@ -6,6 +6,8 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,13 +20,45 @@ import com.myapp.marveluniverse.databinding.RvMarvelHeroesBinding;
 import com.myapp.marveluniverse.modalclass.ResultsItem;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-public class HeroesAdapter extends RecyclerView.Adapter<HeroesAdapter.ViewHolder> {
+public class HeroesAdapter extends RecyclerView.Adapter<HeroesAdapter.ViewHolder> implements Filterable {
 
+  public OnHeroClickInterface onHeroClickInterface;
   private List<ResultsItem> heroesList = new ArrayList<>();
+
+  Filter filter = new Filter() {
+    @Override
+    protected FilterResults performFiltering(CharSequence charSequence) {
+      List<ResultsItem> filteredList = new ArrayList<>();
+
+      if (charSequence==null || charSequence.length()==0) {
+        filteredList.addAll(filteredHeroesList);
+      } else {
+        for (ResultsItem i : filteredHeroesList) {
+          if (i.getName().toLowerCase().contains(charSequence.toString().toLowerCase())) {
+            filteredList.add(i);
+          }
+        }
+      }
+
+      FilterResults filterResults = new FilterResults();
+      filterResults.values = filteredList;
+      return filterResults;
+    }
+
+
+
+    @Override
+    protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+      heroesList.clear();
+      heroesList.addAll((Collection<? extends ResultsItem>) filterResults.values);
+      notifyDataSetChanged();
+    }
+  };
+  private List<ResultsItem> filteredHeroesList = new ArrayList<>();
   private Context context;
-  public  OnHeroClickInterface onHeroClickInterface;
 
   public HeroesAdapter(Context context) {
     this.context = context;
@@ -54,13 +88,13 @@ public class HeroesAdapter extends RecyclerView.Adapter<HeroesAdapter.ViewHolder
 
   public void setHeroesList(List<ResultsItem> heroesList) {
     this.heroesList = heroesList;
+    filteredHeroesList = new ArrayList<>(heroesList);
     notifyDataSetChanged();
   }
 
-  public void updateHeroesList(List<ResultsItem> heroesList) {
-
-    this.heroesList = heroesList;
-    notifyAll();
+  @Override
+  public Filter getFilter() {
+    return filter;
   }
 
   public interface OnHeroClickInterface {

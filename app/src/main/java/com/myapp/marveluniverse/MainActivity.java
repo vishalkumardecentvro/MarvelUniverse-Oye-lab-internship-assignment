@@ -2,9 +2,11 @@ package com.myapp.marveluniverse;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
+import androidx.appcompat.widget.SearchView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -47,10 +49,31 @@ public class MainActivity extends AppCompatActivity implements ArchitecturalFunc
   }
 
   @Override
+  public boolean onCreateOptionsMenu(Menu menu) {
+
+    getMenuInflater().inflate(R.menu.search_menu, menu);
+    MenuItem menuItem = menu.findItem(R.id.iActionSearch);
+    SearchView searchView = (SearchView) menuItem.getActionView();
+    searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+      @Override
+      public boolean onQueryTextSubmit(String query) {
+        return false;
+      }
+
+      @Override
+      public boolean onQueryTextChange(String newText) {
+        heroesAdapter.getFilter().filter(newText);
+        return false;
+      }
+    });
+    return super.onCreateOptionsMenu(menu);
+  }
+
+
+  @Override
   public void instantiate() {
     gridLayoutManager = new GridLayoutManager(MainActivity.this, 2);
     heroesAdapter = new HeroesAdapter(this);
-
 
   }
 
@@ -102,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements ArchitecturalFunc
           offset += 20;
           limit += 20;
           heroesAdapter.notifyItemRangeChanged(offset, limit);
-          Log.i("--sizeList--", String.valueOf(resultsItemList.size()));
         }
       }
     });
@@ -113,8 +135,6 @@ public class MainActivity extends AppCompatActivity implements ArchitecturalFunc
   public void load() {
 
     fetchHeroes(offset, limit);
-
-
   }
 
   private void fetchHeroes(int offset, int limit) {
@@ -135,14 +155,6 @@ public class MainActivity extends AppCompatActivity implements ArchitecturalFunc
 
           binding.rvMarvelHeroes.setAdapter(heroesAdapter);
 
-//          for (ResultsItem i : response.body().getData().getResults()) {
-//
-//            Log.i("--name--", i.getName());
-//            Log.i("--description--", i.getDescription());
-//            Log.i("--thumbnailPath--", i.getThumbnail().getPath());
-//            Log.i("--thumbnailExtension--", i.getThumbnail().getExtension());
-//
-//          }
         }
         binding.progressBar.setVisibility(View.GONE);
 
@@ -155,4 +167,5 @@ public class MainActivity extends AppCompatActivity implements ArchitecturalFunc
     });
 
   }
+
 }
