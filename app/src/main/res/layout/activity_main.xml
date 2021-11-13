@@ -11,15 +11,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-    app:reverseLayout="false"
+    app:reverseLayout="true"
     app:spanCount="2"
     tools:listitem="@layout/rv_marvel_heroes" />
 
-  <ProgressBar
+  <com.google.android.material.progressindicator.LinearProgressIndicator
     android:id="@+id/progressBar"
-    android:layout_width="wrap_content"
+    android:layout_width="250dp"
+    android:indeterminate="true"
     android:layout_height="wrap_content"
-    android:visibility="gone"
+    android:visibility="visible"
     android:layout_centerInParent="true" />
 
 </RelativeLayout>

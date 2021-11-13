@@ -57,6 +57,12 @@ public class HeroesAdapter extends RecyclerView.Adapter<HeroesAdapter.ViewHolder
     notifyDataSetChanged();
   }
 
+  public void updateHeroesList(List<ResultsItem> heroesList) {
+
+    this.heroesList = heroesList;
+    notifyAll();
+  }
+
   public interface OnHeroClickInterface {
     void onHeroClick(int position);
   }

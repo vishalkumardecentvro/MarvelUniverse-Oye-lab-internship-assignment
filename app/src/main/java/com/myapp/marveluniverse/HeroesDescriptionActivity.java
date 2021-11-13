@@ -32,9 +32,8 @@ public class HeroesDescriptionActivity extends AppCompatActivity implements Arch
   @Override
   public void instantiate() {
 
-    Bundle bundle = new Bundle();
     Intent intent = getIntent();
-    bundle = intent.getBundleExtra("heroBundle");
+    Bundle bundle = intent.getBundleExtra("heroBundle");
 
     if (bundle != null) {
       binding.tvDescription.setText(bundle.getString("heroDescription"));
